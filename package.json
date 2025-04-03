@@ -9,10 +9,12 @@
     "deploy": "serverless deploy"
   },
   "dependencies": {
-    "aws-sdk": "^2.1510.0",
-    "express": "^4.18.2",
-    "pg": "^8.11.3",
-    "serverless-http": "^3.2.0"
+    "aws-sdk": "^2.1692.0",
+    "aws-serverless-express": "^3.4.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pg": "^8.14.1",
+    "serverless": "^4.9.1"
   },
   "devDependencies": {
     "serverless-domain-manager": "^7.1.2",

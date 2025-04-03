@@ -31,11 +31,11 @@ npm run deploy
 ## API Endpoints
 
 - `GET /health`: Health check endpoint
-- `GET /api/landmarks/:assessmentId`: Fetch landmark data for a specific assessment ID
+- `GET /landmarks/:assessmentId`: Fetch landmark data for a specific assessment ID
 
 ### Endpoint Details
 
-#### GET /api/landmarks/:assessmentId
+#### GET /landmarks/:assessmentId
 
 Returns landmark data for a specific assessment ID.
 
