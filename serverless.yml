@@ -1,0 +1,32 @@
+org: mavenbaseball
+service: landmark-data-api
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  profile: maven-sso
+
+functions:
+  api:
+    handler: index.handler
+    description: "API for serving landmark data from PostgreSQL database"
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+          cors: true
+
+custom:
+  customDomain:
+    domainName: api.mavenbaseball.com
+    basePath: ''
+    stage: prod
+    createRoute53Record: false  # Since you're managing subdomain manually in GoDaddy
+    endpointType: 'regional'    # Recommended for Lambda-style APIs
+    securityPolicy: tls_1_2
+    certificateArn: arn:aws:acm:us-east-1:987667665534:certificate/235b5e27-3f7e-4df5-9a26-a50a03559970
+
+plugins:
+  - serverless-offline
+  - serverless-domain-manager
