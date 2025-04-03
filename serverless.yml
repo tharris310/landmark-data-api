@@ -20,8 +20,8 @@ functions:
 custom:
   customDomain:
     domainName: api.mavenbaseball.com
-    basePath: ''
-    stage: prod
+    basePath: 'landmarks'
+    stage: dev
     createRoute53Record: false  # Since you're managing subdomain manually in GoDaddy
     endpointType: 'regional'    # Recommended for Lambda-style APIs
     securityPolicy: tls_1_2

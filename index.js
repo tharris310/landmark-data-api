@@ -8,12 +8,27 @@ const app = express();
 app.use(express.json());
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+app.get('/health', async (req, res) => {
+  try {
+    // Test database connection
+    await db.pool.query('SELECT 1');
+    res.status(200).json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      database: 'connected'
+    });
+  } catch (error) {
+    console.error('Health check failed:', error);
+    res.status(500).json({ 
+      status: 'error',
+      error: 'Database connection failed',
+      details: error.message
+    });
+  }
 });
 
 // Landmark data endpoint
-app.get('/landmarks/:assessmentId', async (req, res) => {
+app.get('/:assessmentId', async (req, res) => {
   try {
     const { assessmentId } = req.params;
     
