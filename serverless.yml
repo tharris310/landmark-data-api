@@ -5,6 +5,7 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: us-east-1
+  stage: prod
   profile: maven-sso
   vpc:
     subnetIds:
@@ -24,14 +25,14 @@ provider:
 
 functions:
   health:
-    handler: index.handler
+    handler: handler.health
     description: "Health check endpoint"
     events:
       - http:
           path: health
           method: get
   landmarks:
-    handler: index.handler
+    handler: handler.landmarks
     description: "Landmark data endpoint"
     events:
       - http:
@@ -42,10 +43,10 @@ custom:
   customDomain:
     domainName: api.mavenbaseball.com
     basePath: 'landmarks'
-    stage: dev
+    stage: prod
     createRoute53Record: false  # Since you're managing subdomain manually in GoDaddy
+    createDomain: false
     endpointType: 'regional'    # Recommended for Lambda-style APIs
-    securityPolicy: tls_1_2
     certificateArn: arn:aws:acm:us-east-1:987667665534:certificate/235b5e27-3f7e-4df5-9a26-a50a03559970
 
 plugins:
