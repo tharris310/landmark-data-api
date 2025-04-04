@@ -6,16 +6,37 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   profile: maven-sso
+  vpc:
+    subnetIds:
+      - subnet-05b67d8cde33380b9
+      - subnet-0503293b9087e8dcd
+      - subnet-0b28c751d76c0dbfc
+      - subnet-061539b3c0d701466
+      - subnet-0953e84eda53a9731
+    securityGroupIds:
+      - sg-0a8875955806ead0c
+  environment:
+    DB_HOST: maven-db-prod.cluster-c8tgs884sm3s.us-east-1.rds.amazonaws.com
+    DB_USER: mavenadmin
+    DB_PASSWORD: K24eSX.z-Mk<U>|QRSCi|85domCY
+    DB_NAME: mavenbaseball
+    DB_PORT: 5432
 
 functions:
-  api:
+  health:
     handler: index.handler
-    description: "API for serving landmark data from PostgreSQL database"
+    description: "Health check endpoint"
     events:
       - http:
-          path: /{proxy+}
-          method: any
-          cors: true
+          path: health
+          method: get
+  landmarks:
+    handler: index.handler
+    description: "Landmark data endpoint"
+    events:
+      - http:
+          path: "{assessmentId}"
+          method: get
 
 custom:
   customDomain:
@@ -28,5 +49,4 @@ custom:
     certificateArn: arn:aws:acm:us-east-1:987667665534:certificate/235b5e27-3f7e-4df5-9a26-a50a03559970
 
 plugins:
-  - serverless-offline
   - serverless-domain-manager
