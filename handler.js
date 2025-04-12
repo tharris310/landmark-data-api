@@ -2,21 +2,40 @@
 const db = require('./lib/database');
 
 exports.health = async (event) => {
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Credentials': true,
+  };
+
   try {
-    await db.pool.query('SELECT 1');
+    // Test database connection with timeout
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Database connection timeout')), 5000)
+    );
+    
+    const dbPromise = db.query('SELECT 1');
+    await Promise.race([dbPromise, timeoutPromise]);
+
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({
         status: 'ok',
         timestamp: new Date().toISOString(),
-        database: 'connected',
+        database: 'connected'
       }),
     };
   } catch (err) {
-    console.error('Health check error:', err);
+    console.error('Health check failed:', err.message);
+    
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Internal server error', details: err.message }),
+      headers,
+      body: JSON.stringify({ 
+        error: 'Internal server error', 
+        details: err.message,
+        type: err.name
+      }),
     };
   }
 };
@@ -46,7 +65,8 @@ exports.landmarks = async (event) => {
       body: JSON.stringify(result.rows),
     };
   } catch (err) {
-    console.error('Landmark handler error:', err);
+    console.error('Landmark handler error:', err.message);
+    
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Internal server error', details: err.message }),

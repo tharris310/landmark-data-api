@@ -15,13 +15,14 @@ provider:
       - subnet-061539b3c0d701466
       - subnet-0953e84eda53a9731
     securityGroupIds:
-      - sg-0a8875955806ead0c
+      - sg-0552a2fe1a1162bec
   environment:
-    DB_HOST: maven-db-prod.cluster-c8tgs884sm3s.us-east-1.rds.amazonaws.com
-    DB_USER: mavenadmin
-    DB_PASSWORD: K24eSX.z-Mk<U>|QRSCi|85domCY
-    DB_NAME: mavenbaseball
-    DB_PORT: 5432
+    DB_SECRET_NAME: prod/maven/db-creds
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource: arn:aws:secretsmanager:us-east-1:987667665534:secret:prod/maven/db-creds*
 
 functions:
   health:
