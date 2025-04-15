@@ -32,6 +32,7 @@ functions:
       - http:
           path: health
           method: get
+          cors: true
           private: false
   landmarks:
     handler: handler.landmarks
@@ -40,6 +41,7 @@ functions:
       - http:
           path: "{assessmentId}"
           method: get
+          cors: true
           private: true
 
 custom:
