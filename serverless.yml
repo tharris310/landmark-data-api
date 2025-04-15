@@ -43,6 +43,10 @@ functions:
           method: get
           cors: true
           private: true
+          request:
+            parameters:
+              paths:
+                assessmentId: true
 
 custom:
   customDomain:
