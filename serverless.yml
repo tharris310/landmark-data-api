@@ -18,11 +18,19 @@ provider:
       - sg-0552a2fe1a1162bec
   environment:
     DB_SECRET_NAME: prod/maven/db-creds
+    S3_BUCKET: maven-landmarks
   iamRoleStatements:
     - Effect: Allow
       Action:
         - secretsmanager:GetSecretValue
       Resource: arn:aws:secretsmanager:us-east-1:987667665534:secret:prod/maven/db-creds*
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::maven-landmarks
+        - arn:aws:s3:::maven-landmarks/*
 
 functions:
   health:
@@ -47,6 +55,28 @@ functions:
             parameters:
               paths:
                 assessmentId: true
+              querystrings:
+                type: false  # Optional parameter
+  processPitchingLandmarks:
+    handler: handler.processPitchingLandmarks
+    description: "Process new pitching landmark files from S3"
+    events:
+      - s3:
+          bucket: maven-landmarks
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: pitching/
+          existing: true
+  processHittingLandmarks:
+    handler: handler.processHittingLandmarks
+    description: "Process new hitting landmark files from S3"
+    events:
+      - s3:
+          bucket: maven-landmarks
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: hitting/
+          existing: true
 
 custom:
   customDomain:
